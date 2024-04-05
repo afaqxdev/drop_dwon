@@ -1,4 +1,3 @@
-import 'package:daaem_audit/Core/Constant/Colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -25,7 +24,7 @@ class CustomDropdownButton extends StatefulWidget {
     required this.onChanged,
     this.dropvalue,
     required this.iconsizes,
-    this.backgroundColor = white,
+    this.backgroundColor = Colors.white,
     this.size = 16,
     this.width,
     this.fontWeight = FontWeight.w600,
@@ -53,14 +52,14 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
             menuMaxHeight: 200,
             value: widget.dropvalue,
             focusColor: widget.backgroundColor,
-            dropdownColor: white,
+            dropdownColor: Colors.white,
             iconEnabledColor: widget.color,
             iconDisabledColor: widget.color,
             isExpanded: true,
             isDense: true,
             borderRadius: BorderRadius.circular(10.r),
             style: TextStyle(
-                color: black,
+                color: Colors.black,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'Montserrat'),
@@ -98,7 +97,7 @@ class ModelDropDown<T> extends StatefulWidget {
     required this.items,
     required this.onChanged,
     required this.iconsizes,
-    this.backgroundColor = white,
+    this.backgroundColor = Colors.white,
     this.size = 16,
     this.width,
     this.fontWeight = FontWeight.w600,
@@ -135,21 +134,22 @@ class _ModelDropDownState<T> extends State<ModelDropDown<T>> {
           borderRadius: BorderRadius.circular(12.r),
           color: widget.backgroundColor,
           boxShadow: const [
-            BoxShadow(color: grey, blurStyle: BlurStyle.outer, blurRadius: 1)
+            BoxShadow(
+                color: Colors.grey, blurStyle: BlurStyle.outer, blurRadius: 1)
           ]),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
           menuMaxHeight: 200,
           value: widget.selectedValue,
           focusColor: widget.backgroundColor,
-          dropdownColor: white,
+          dropdownColor: Colors.white,
           iconEnabledColor: widget.color,
           iconDisabledColor: widget.color,
           isExpanded: true,
           isDense: true,
           borderRadius: BorderRadius.circular(10),
           style: const TextStyle(
-            color: black,
+            color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w400,
             fontFamily: 'Montserrat',
