@@ -17,7 +17,7 @@ class CustomDropdownButton extends StatefulWidget {
   final double? height;
 
   CustomDropdownButton({
-    Key? key,
+    super.key,
     required this.hint,
     this.color,
     required this.items,
@@ -29,7 +29,7 @@ class CustomDropdownButton extends StatefulWidget {
     this.width,
     this.fontWeight = FontWeight.w600,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomDropdownButton> createState() => _CustomDropdownButtonState();

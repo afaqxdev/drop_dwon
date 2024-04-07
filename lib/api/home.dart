@@ -1,38 +1,27 @@
-import 'package:drop_down/api/api_class.dart';
 import 'package:drop_down/api/product_model.dart';
+import 'package:drop_down/api/provider.dart';
 import 'package:drop_down/dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MyHomePagess extends StatefulWidget {
+  const MyHomePagess({
+    super.key,
+  });
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePagess> createState() => _MyHomePagessState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  ApiClass apiClass = ApiClass();
-  void _incrementCounter() {
-    apiClass.getList();
-  }
-
+class _MyHomePagessState extends State<MyHomePagess> {
   ProductModel? selectedCategory;
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PostState>(context);
     List<DropdownMenuItem<ProductModel>> category =
-        apiClass.prodectlist.map((ProductModel categoryModel) {
+        provider.list.map((ProductModel categoryModel) {
       return DropdownMenuItem<ProductModel>(
         onTap: () {},
         value: categoryModel,
@@ -48,30 +37,82 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ModelDropDown<ProductModel>(
-              height: 55.h,
-              hint: 'Select a Category',
-              selectedValue: selectedCategory,
-              iconsizes: 24,
-              items: category,
-              onChanged: (value) async {
-                selectedCategory = value;
-
-                selectedCategory = value;
-                setState(() {});
-              },
+      body: Consumer<PostState>(builder: (context, value, child) {
+        if (value.postStatus == PostStatus.success) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // ModelDropDown<ProductModel>(
+                //   height: 55.h,
+                //   hint: 'Select a Category',
+                //   selectedValue: selectedCategory,
+                //   iconsizes: 24,
+                //   items: category,
+                //   onChanged: (value) async {
+                //     selectedCategory = value;
+                //     setState(() {});
+                //   },
+                // ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: value.list.length,
+                    itemBuilder: (context, index) {
+                      return Image.network(value.list[index].image.toString());
+                    },
+                  ),
+                )
+              ],
             ),
-          ],
-        ),
-      ),
+          );
+        } else if (value.postStatus == PostStatus.error) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  value.message, // Display the error message
+                  style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    provider.fetchData(); // Retry fetching data
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          // Handle success state here
+          // For example, display fetched data
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  value.message, // Display the error message
+                  style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    value.fetchData(); // Retry fetching data
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+      }),
+
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          provider.fetchData();
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

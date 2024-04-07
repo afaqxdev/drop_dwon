@@ -1,36 +1,33 @@
+import 'dart:convert';
+
+import 'package:drop_down/api/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as https;
 import 'package:provider/provider.dart';
 
 enum PostStatus { loading, success, error }
 
-class ApiModel {
-  // Your ApiModel class implementation
-}
-
 class PostState extends ChangeNotifier {
   PostStatus _postStatus = PostStatus.loading;
-  List<ApiModel> _searchList = [];
-  List<ApiModel> _list = [];
+  List<ProductModel> _list = [];
   String _message = '';
   String _searchMessage = '';
 
   // Getters for accessing state properties
   PostStatus get postStatus => _postStatus;
-  List<ApiModel> get searchList => _searchList;
-  List<ApiModel> get list => _list;
+  List<ProductModel> get list => _list;
   String get message => _message;
   String get searchMessage => _searchMessage;
 
   // Method for updating state
   void updateState({
     PostStatus? postStatus,
-    List<ApiModel>? list,
-    List<ApiModel>? searchList,
+    List<ProductModel>? list,
+    List<ProductModel>? searchList,
     String? message,
     String? searchMessage,
   }) {
     _list = list ?? _list;
-    _searchList = searchList ?? _searchList;
     _message = message ?? _message;
     _searchMessage = searchMessage ?? _searchMessage;
     _postStatus = postStatus ?? _postStatus;
@@ -39,37 +36,42 @@ class PostState extends ChangeNotifier {
 
   // Method for making API call
   Future<void> fetchData() async {
+    final List<ProductModel> apiData =
+        []; // Replace this with your actual API response
     try {
       // Simulate API call
-      await Future.delayed(Duration(seconds: 2)); // Simulating a delay
+      final Uri uri = Uri.parse("https://fakestoreapi.com/products");
+      final response = await https.get(uri);
+      if (response.statusCode == 200) {
+        final jsonDecode = json.decode(response.body.toString());
+        for (var i in jsonDecode) {
+          print(i);
+          apiData.add(ProductModel.fromJson(i));
+        }
+      }
 
-      // Replace this with your actual API call
-      // Example: final response = await http.get('your_api_endpoint');
-
-      // If API call is successful
-      final List<ApiModel> apiData =
-          []; // Replace this with your actual API response
       updateState(
         postStatus: PostStatus.success,
         list: apiData,
       );
     } catch (e) {
-      // If API call fails
-      updateState(postStatus: PostStatus.error);
+      updateState(postStatus: PostStatus.error, message: e.toString());
     }
   }
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => PostState(), // Provide an instance of PostState
-      child: MaterialApp(
+      child: const MaterialApp(
         title: 'Flutter Demo',
         home: MyHomePage(),
       ),
@@ -78,6 +80,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final postState =
@@ -85,19 +89,19 @@ class MyHomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Provider Example'),
+        title: const Text('Provider Example'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Post Status: ${postState.postStatus}'),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 postState.fetchData(); // Call the fetchData method
               },
-              child: Text('Fetch Data'),
+              child: const Text('Fetch Data'),
             ),
           ],
         ),
