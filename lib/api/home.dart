@@ -1,9 +1,6 @@
 import 'package:drop_down/api/product_model.dart';
 import 'package:drop_down/api/provider.dart';
-import 'package:drop_down/dropdown.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class MyHomePagess extends StatefulWidget {
@@ -20,8 +17,7 @@ class _MyHomePagessState extends State<MyHomePagess> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<PostState>(context);
-    List<DropdownMenuItem<ProductModel>> category =
-        provider.list.map((ProductModel categoryModel) {
+    provider.list.map((ProductModel categoryModel) {
       return DropdownMenuItem<ProductModel>(
         onTap: () {},
         value: categoryModel,
